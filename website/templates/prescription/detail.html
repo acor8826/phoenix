@@ -1,0 +1,54 @@
+{% extends 'store/base.html' %}
+{% block title %}
+  Checkout
+{% endblock %}
+{% block content %}
+  <h1>Checkout</h1>
+  <form method="post" class="order-form">
+  <div class="order-info">
+    <h3>Your Prescription:{{ order_id }}</h3>
+<center>
+    <table class="table">
+      <thead>
+        <th>OrderItem ID</th>
+        <th>Date written</th>
+        <th>Pet Name</th>
+        <th>Doctor</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total Price</th>
+        <th>Issue Rx</th>
+      </thead>
+      {% for item in orderitem %}
+      <tbody>
+        <td>{{item.id}}</td>
+        <td>{{item.rx_written}}</td>
+        <td>{{rx.pet}}</td>
+        <td>{{rx.doctor}}</td>
+        <td>{{item.product}}</td>
+        <td>${{item.price}}</td>
+        <td>{{item.quantity}}</td>
+        <td>${{item.price}}</td>
+        <td> <button class = "btn btn-outline-primary">Update</button></th>
+        </th>
+      </tbody>
+      {% endfor %}
+    </table>
+<hr/>
+    <p>Total: ${{ cart.get_total_price }}</p>
+  </div>
+</table>
+<hr/>
+Item Lines<br/>
+{% for qs in orderitem %}
+{{qs.product}}<br/>
+
+{% endfor %}
+<hr/>
+</center>
+    <p><input type="submit" value="Place order"></p>
+    {% csrf_token %}
+  </form>
+  <button class = "btn btn-outline-success">Delete</button>
+{% endblock %}
