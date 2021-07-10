@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from Product.models import Product, Sales_Packaging
 from users.models import Clinic, Customer, Pet, Practitioner
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, pre_init
 from django.dispatch import receiver
 from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -75,6 +75,8 @@ class OrderItem(models.Model):
     packaging = models.ForeignKey(Sales_Packaging, on_delete=models.CASCADE, blank=True,null=True)
     def __str__(self):
         return '{}'.format(self.id)
+
+
 
     #####override save method #####    
     def save(self, *args, **kwargs):

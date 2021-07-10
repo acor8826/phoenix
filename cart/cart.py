@@ -37,6 +37,7 @@ class Cart(object):
         for product in products:
             self.cart[str(product.id)]['product'] = product
 
+
         for item in self.cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
@@ -95,7 +96,7 @@ class Cart(object):
     
     def get_cart_tax(self):
         net_tax = Decimal(self.get_total_price()/11)
-        return net_tax
+        return round(net_tax,2)
    
     def get_prescriber(self):
         return str('test')
