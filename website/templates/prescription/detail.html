@@ -4,51 +4,49 @@
 {% endblock %}
 {% block content %}
   <h1>Checkout</h1>
-  <form method="post" class="order-form">
+  <form method="post" class="order-form">{% csrf_token %}{{ formset.management_form }}
   <div class="order-info">
     <h3>Your Prescription:{{ order_id }}</h3>
 <center>
     <table class="table">
       <thead>
-        <th>OrderItem ID</th>
         <th>Date written</th>
+        <th>Pet Owner</th>
         <th>Pet Name</th>
         <th>Doctor</th>
         <th>Product</th>
         <th>Price</th>
         <th>Quantity</th>
         <th>Total Price</th>
-        <th>Issue Rx</th>
+        <th>Available Packaging</th>
+        <th>View PDF</th>
+        <th>Delete</th>
       </thead>
-      {% for item in orderitem %}
       <tbody>
-        <td>{{item.id}}</td>
-        <td>{{item.rx_written}}</td>
-        <td>{{rx.pet}}</td>
-        <td>{{rx.doctor}}</td>
-        <td>{{item.product}}</td>
-        <td>${{item.price}}</td>
-        <td>{{item.quantity}}</td>
-        <td>${{item.price}}</td>
-        <td> <button class = "btn btn-outline-primary">Update</button></th>
-        </th>
+        {% for form in formset %}
+        <tr>
+          <td>{{form.rx_written}}</td>
+          <td>{{formset.order_id}}</td>
+          <td>{{form.pet}}</td>
+          <td>{{form.doctor}}</td>
+          <td>{{form.product}}</td>
+          <td>{{form.price}}</td>
+          <td>{{form.quantity}}</td>
+          <td>{{form.tot_cost}}</td>
+          <td>{{form.packaging}}</td>
+          <td>Issue Rx</td>
+          <td>{% if formset.can_delete %}{% endif %}<li>{{ form.DELETE }}</li></td>
+        </tr>
       </tbody>
-      {% endfor %}
+            {% endfor %}
+
     </table>
 <hr/>
     <p>Total: ${{ cart.get_total_price }}</p>
   </div>
 </table>
-<hr/>
-Item Lines<br/>
-{% for qs in orderitem %}
-{{qs.product}}<br/>
-
-{% endfor %}
-<hr/>
 </center>
     <p><input type="submit" value="Place order"></p>
-    {% csrf_token %}
+
   </form>
-  <button class = "btn btn-outline-success">Delete</button>
 {% endblock %}

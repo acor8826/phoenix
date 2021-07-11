@@ -11,9 +11,10 @@ from .forms import RxCreateForm, RxAddProductForm, RxOrderItemUpdateForm
 #from shop.recommender import Recommender
 from django.forms import inlineformset_factory
 from django.forms import formset_factory
-from users.models import Clinic
+from users.models import Clinic, Customer
 def script_detail(request):
     cart = Cart(request)
+    ###querysets####
     instance = request.session.session_key
     order_id = str(request.session.session_key)
     Order.objects.get_or_create(customer=request.user,order_id=instance)
@@ -21,22 +22,29 @@ def script_detail(request):
     orderitem = OrderItem.objects.filter(order=order)
     user= request.user
     clinic = Clinic.objects.get(user=user)
+    pet_owner, created = Customer.objects.get_or_create(clinic=clinic)
+###INLINE FORM####
+    OrderFormSet = inlineformset_factory(Order, OrderItem, fields=('order',
+        'rx_written','pet','doctor','product','price','quantity','tot_cost','tot_cost','packaging', ), extra=0)
+    order = Order.objects.get(order_id=instance)
+    formset= OrderFormSet(instance=order)
+    #####CART####
     for item in cart:
         OrderItem.objects.update_or_create(order=order,
             product=item['product'],
             price=item['price'],
             quantity=item['quantity'])
     if request.method == 'POST':
-        update_form = RxOrderItemUpdateForm(request.POST)
-        if update_form.is_valid():
-            form = update_form.save(commit=false)
-            form.save()
-        cart.clear()
+        #update_form = RxOrderItemUpdateForm()
+        formset = OrderFormSet(request.POST, instance=order)
+        if formset.is_valid():
+            formset.save()
+            cart.clear()
         #request.session.delete()
-        return render(request, 'order/created.html', {'update_form':update_form})
+        return render(request, 'order/created.html', {'formset':formset})
     else:
         update_form = RxOrderItemUpdateForm()
-    return render(request, 'prescription/detail.html', {'orderitem':orderitem,'order':order,'order_id':order_id,'clinic':clinic,'user':user, 'cart':cart})
+    return render(request, 'prescription/detail.html', {'formset':formset,'pet_owner':pet_owner,'orderitem':orderitem,'order':order,'order_id':order_id,'clinic':clinic,'user':user, 'cart':cart})
     #return render(request, 'prescription/detail.html', {'order_id':order_id,'clinic':clinic,'user':user, 'cart':cart,'form':form})
     #coupon_apply_form = CouponApplyForm()
 

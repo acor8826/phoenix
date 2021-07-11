@@ -30,6 +30,7 @@ urlpatterns = [
     path('script/', include('rx.urls', namespace='script')),
     path('users/', include('users.urls')),
     path('', include('website.urls', namespace='shop')),
-    path('orders/', include('orders.urls', namespace='orders')), 
+    path('orders/', include('orders.urls', namespace='orders')),
+    url(r'^chaining/', include('smart_selects.urls')),
 ]+ static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)

@@ -149,6 +149,8 @@ class Customer(models.Model):
 	updated = models.DateTimeField(auto_now=True)
 	class Meta:
 		ordering = ('user',)
+		verbose_name = ('Pet Owner')
+		verbose_name_plural = ('Pet Owners')
 
 	def __str__(self):
 		return str(self.user)

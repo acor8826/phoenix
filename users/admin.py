@@ -32,10 +32,16 @@ class NurseItemInline(admin.TabularInline):
 	model = Nurse
 	raw_id_fields = ['clinic']
 	extra=0
+class CustomerItemInline(admin.TabularInline):
+	model = Customer
+	raw_id_fields = ['clinic']
+	extra=0
+	class Meta:
+		verbose_name = 'Pet Owner'
 class ClinicAdmin(admin.ModelAdmin):
 	fields = ('clinic_name','email', 'address', 'city','postal_code', 'user')
 	list_display = ['clinic_name','email', 'address', 'city','postal_code']
-	inlines = [PractitionerItemInline, NurseItemInline ]
+	inlines = [PractitionerItemInline, NurseItemInline, CustomerItemInline]
 ###PHARMACY####
 class PharmacistItemInline(admin.TabularInline):
 	model = Pharmacist

@@ -4,6 +4,8 @@
   Your shopping cart
 {% endblock %}
 {% block content %}
+<script src="/static/smart-selects/admin/js/chainedfk.js"></script>
+<script src="/static/smart-selects/admin/js/bindfields.js"></script>
 <div class="row">
   <div class="col-12 col-md-4"></div>
    <div class="col-12 col-md-4">
@@ -47,8 +49,9 @@
             </td>
             <td class="num">${{ item.price }}</td>
             <td class="num">${{ item.total_price }}</td>
-            
+           
           </tr>
+          <tr><td><select>{{item.packaging}}</select></td>
         {% endwith %}
       {% endfor %}
       <tr class="total">

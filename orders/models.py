@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Product.models import Product, Sales_Packaging
+from inventory.models import Packaging
 from users.models import Clinic, Customer, Pet, Practitioner
 from django.db.models.signals import post_save, pre_save, pre_init
 from django.dispatch import receiver
@@ -8,6 +9,7 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
 import datetime
+from smart_selects.db_fields import ChainedForeignKey
 #class Client(models.Model):
 #    clinic = models.OneToOneField(Clinic, on_delete=models.CASCADE, blank=True,null=True)
 #    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, blank=True, null=True)
@@ -72,13 +74,18 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1, blank=True, null=True)
     tot_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     #shipping_address = models.ForeignKey(ShippingAddress, on_delete=models.CASCADE, blank=True, null=True)
-    packaging = models.ForeignKey(Sales_Packaging, on_delete=models.CASCADE, blank=True,null=True)
+    packaging = models.ForeignKey(Sales_Packaging, on_delete=models.CASCADE, blank=True, null=True)
+    
+
     def __str__(self):
         return '{}'.format(self.id)
 
 
 
     #####override save method #####    
+    def sales_packaging(self):
+        product_pack = self.product.packaging.all()
+        return product_pack
     def save(self, *args, **kwargs):
         self.price = self.product.price
         self.tot_cost = self.product.price * self.quantity
